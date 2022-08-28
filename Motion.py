@@ -12,7 +12,6 @@ pygame.init()
 PROJECT_ROOT = Path(__file__).parent.parent
 
 detected_motion = False
-frame_rec_count = 0
 
 while(True):
     # current frame of camera
@@ -33,9 +32,6 @@ while(True):
         detected_motion = True
         mixer.music.load(PROJECT_ROOT / "Ignition Hacks 2022/0125. Imagination - AShamaluevMusic.mp3")
         mixer.music.play()
-        
-    if detected_motion:
-        frame_rec_count = frame_rec_count + 1
     
     # esc button pressed, then quit
     k = cv2.waitKey(40) & 0xff
