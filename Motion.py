@@ -6,34 +6,40 @@ from pathlib import Path
 
 # camera
 camera = cv2.VideoCapture(0)
-last_mean = 0
 
+# pixel_mean variable for storing mean value of all pixels of a frame
+pixel_mean = 0
+
+# initialize pygame
 pygame.init()
-PROJECT_ROOT = Path(__file__).parent.parent
-
-detected_motion = False
 
 while(True):
-    # current frame of camera
+    # get current frame of camera
     ret, frame = camera.read()
     cv2.imshow('frame', frame)
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     
-    # compare mean values of all pixels of two consecutive frames
-    # (subtract two mean values)
-    
-    result = np.abs(np.mean(gray) - last_mean) # variable for change in frame
 
-    last_mean = np.mean(gray)
+# path folder for loading files
+PROJECT_ROOT = Path(__file__).parent.parent
+
+# variable to see if motion is detected or not
+detected_motion = False
+    # compare mean values of all pixels of 2 consecutive frames, then subtract the 2 mean values
+    result = np.abs(np.mean(gray) - pixel_mean) # variable for change in frame
+    # change in frame determines motion
     
-    # if motion detected
+    # update the pixel mean each time with each new frame
+    pixel_mean = np.mean(gray)
+    
+    # if motion detected, detected_motion is True, and sound will play and let caregivers know that the child has woken up
     if result > 2:
         print("Motion detected!")
         detected_motion = True
         mixer.music.load(PROJECT_ROOT / "Ignition Hacks 2022/0125. Imagination - AShamaluevMusic.mp3")
         mixer.music.play()
     
-    # esc button pressed, then quit
+    # if esc button pressed, then quit
     k = cv2.waitKey(40) & 0xff
     if k == 27:
         break
