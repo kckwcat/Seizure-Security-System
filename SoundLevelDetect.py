@@ -8,7 +8,7 @@ pygame.init()
 alarm_sound = pygame.mixer.Sound("mixkit-alarm-digital-clock-beep-989.wav")
 
 
-def create_sound():
+def alert_sound():
     CHUNK = 1024
     FORMAT = pyaudio.paInt16
     CHANNELS = 1
@@ -17,8 +17,8 @@ def create_sound():
     stream = pa.open(format=FORMAT, channels=CHANNELS, rate=RATE, input=True, frames_per_buffer=CHUNK)
     while True:
         # read audio data
-        string_audio_data = stream.read(CHUNK)
-        audio_data = np.frombuffer(string_audio_data, np.int16)
+        str_audio_data = stream.read(CHUNK)
+        audio_data = np.frombuffer(str_audio_data, np.int16)
         volume_detected = np.linalg.norm(audio_data)*10
         
         # if possible seizure detected, alarm will sound
@@ -26,8 +26,6 @@ def create_sound():
             print('oh no')
             alarm_sound.set_volume(0.8)
             pygame.mixer.Sound.play(alarm_sound)
-            
-        #print(int(volume_norm))
 
 
-create_sound()
+alert_sound()
